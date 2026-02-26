@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MAITHRI FEST 2026</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            /* Replace the URL below with your image later */
+            background: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), 
+                        url('https://images.unsplash.com/photo-1492684223066-81342ee5ff30'); 
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: white;
+        }
+
+        .container {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(15px);
+            padding: 40px;
+            border-radius: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            text-align: center;
+            width: 90%;
+            max-width: 500px;
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+        }
+
+        h1 { font-size: 2.5rem; margin-bottom: 20px; letter-spacing: 2px; }
+
+        input, select {
+            width: 100%;
+            padding: 12px;
+            margin: 10px 0;
+            border-radius: 8px;
+            border: none;
+            background: rgba(255, 255, 255, 0.9);
+            font-size: 1rem;
+        }
+
+        .btn {
+            background: #00d2ff;
+            background: -webkit-linear-gradient(to right, #3a7bd5, #00d2ff);
+            background: linear-gradient(to right, #3a7bd5, #00d2ff);
+            color: white;
+            border: none;
+            padding: 15px;
+            width: 100%;
+            border-radius: 8px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: 0.3s;
+            margin-top: 10px;
+        }
+
+        .btn:hover { transform: scale(1.02); opacity: 0.9; }
+
+        #success-screen { display: none; }
+        .success-card { background: white; color: #333; padding: 20px; border-radius: 10px; margin-top: 20px; }
+        
+        /* Anti-Screenshot CSS */
+        @media print { body { display:none; } }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <div id="reg-form">
+            <h1>MAITHRI FEST</h1>
+            <input type="text" id="pin" placeholder="enter your pin no">
+            <input type="text" id="mobile" placeholder="Enter Mobile Number">
+            <select id="branch">
+                <option value="">Select Branch</option>
+                <option value="CSE">CSE</option>
+                <option value="AI&ML">AI & ML</option>
+                <option value="DS">Data Science</option>
+                <option value="ECE">ECE</option>
+                <option value="EEE">EEE</option>
+                <option value="MECH">MECH</option>
+                <option value="CIVIL">CIVIL</option>
+                <option value="IT">IT</option>
+                <option value="CSBS">CSBS</option>
+            </select>
+            <button class="btn" onclick="checkEligibility()">REGISTER NOW</button>
+            <p id="error-msg" style="color: #ff4b2b; font-weight: bold;"></p>
+        </div>
+
+        <div id="success-screen">
+            <h2 style="color: #4BB543;">SUCCESS! ✅</h2>
+            <div class="success-card">
+                <p id="status-text" style="font-weight: bold;"></p>
+                <hr>
+                <p><strong>PIN:</strong> <span id="display-pin"></span></p>
+            </div>
+            <p style="color: #ff4b2b; font-size: 0.8rem; margin-top: 15px;">
+                ⚠️ SCREENSHOTS ARE DISABLED FOR SECURITY
+            </p>
+        </div>
+    </div>
+
+    <script>
+        // Existing JavaScript logic for checkEligibility and Screenshot blocking...
+        // [Add the script from our previous step here]
+    </script>
+</body>
+</html>
