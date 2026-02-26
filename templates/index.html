@@ -9,7 +9,6 @@
             margin: 0;
             padding: 0;
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            /* Replace the URL below with your image later */
             background: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), 
                         url('https://images.unsplash.com/photo-1492684223066-81342ee5ff30'); 
             background-size: cover;
@@ -44,6 +43,7 @@
             border: none;
             background: rgba(255, 255, 255, 0.9);
             font-size: 1rem;
+            box-sizing: border-box;
         }
 
         .btn {
@@ -66,7 +66,8 @@
         #success-screen { display: none; }
         .success-card { background: white; color: #333; padding: 20px; border-radius: 10px; margin-top: 20px; }
         
-        /* Anti-Screenshot CSS */
+        #error-msg { color: #ff4b2b; font-weight: bold; margin-top: 10px; }
+
         @media print { body { display:none; } }
     </style>
 </head>
@@ -90,7 +91,7 @@
                 <option value="CSBS">CSBS</option>
             </select>
             <button class="btn" onclick="checkEligibility()">REGISTER NOW</button>
-            <p id="error-msg" style="color: #ff4b2b; font-weight: bold;"></p>
+            <p id="error-msg"></p>
         </div>
 
         <div id="success-screen">
@@ -107,8 +108,45 @@
     </div>
 
     <script>
-        // Existing JavaScript logic for checkEligibility and Screenshot blocking...
-        // [Add the script from our previous step here]
+        function checkEligibility() {
+            const pin = document.getElementById('pin').value.trim();
+            const mobile = document.getElementById('mobile').value.trim();
+            const branch = document.getElementById('branch').value;
+            const errorMsg = document.getElementById('error-msg');
+
+            if (!pin || !mobile || !branch) {
+                errorMsg.innerText = "All fields are required!";
+                return;
+            }
+
+            const start = pin.substring(0, 2);
+            const allowed = ["23", "24", "25", "26", "27", "28"];
+            
+            if (!allowed.includes(start)) {
+                errorMsg.innerText = "You are not eligible for this fest.";
+                return;
+            }
+
+            fetch('/register', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ pin: pin, mobile: mobile, branch: branch })
+            })
+            .then(res => res.json())
+            .then(data => {
+                if (data.success) {
+                    document.getElementById('reg-form').style.display = 'none';
+                    document.getElementById('success-screen').style.display = 'block';
+                    document.getElementById('status-text').innerText = data.message;
+                    document.getElementById('display-pin').innerText = pin;
+                } else {
+                    errorMsg.innerText = data.message;
+                }
+            })
+            .catch(err => {
+                errorMsg.innerText = "Server error. Please try again.";
+            });
+        }
     </script>
 </body>
 </html>
