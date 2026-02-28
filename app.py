@@ -27,7 +27,14 @@ def register():
     category = request.form.get('category')
     name = request.form.get('name')
     val = request.form.get('pin') if category == 'student' else request.form.get('mobile')
-    info = request.form.get('branch') if category == 'student' else request.form.get('job_info')
+    info = request.form.get('job_info') if category == 'vip' else request.form.get('branch')
+
+    # VIP Qualification Check
+    if category == 'vip':
+        low_qualifications = ['10th', '12th', 'inter', 'intermediate', 'school', 'ssc', 'tenth']
+        if any(q in info.lower() for q in low_qualifications):
+            error_msg = "Sorry, registration unsuccessful. Go to Student Registration and try!"
+            return render_template('index.html', error=error_msg)
 
     conn = sqlite3.connect('maithri_fest.db')
     cursor = conn.cursor()
@@ -43,7 +50,7 @@ def download_ticket(name, val, info, category):
     p = canvas.Canvas(buffer, pagesize=A6)
     width, height = A6
     
-    # Theme Colors
+    # Red Theme
     p.setFillColorRGB(0.8, 0.2, 0.1)
     p.rect(0, 0, width, height, fill=1)
     p.setFillColorRGB(1, 1, 1)
@@ -62,7 +69,7 @@ def download_ticket(name, val, info, category):
     p.drawString(15*mm, height-63*mm, f"ID/MOB: {val}")
     p.drawString(15*mm, height-71*mm, f"INFO: {info.upper()}")
 
-    # FAIL-SAFE QR: Uses an external API so your server never crashes
+    # QR API: Stable and Fail-safe
     qr_url = f"https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=MAITHRI26-{val}"
     p.drawInlineImage(qr_url, width/2-20*mm, 15*mm, width=40*mm, height=40*mm)
 
