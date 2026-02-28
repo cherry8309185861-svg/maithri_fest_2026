@@ -3,131 +3,76 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MAITHRI FEST | ELITE PORTAL</title>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <title>Welcome to Maithri 2026</title>
+    <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        :root { --glass: rgba(255, 255, 255, 0.1); }
-        body { font-family: 'Poppins', sans-serif; background: #0f0c29; background: linear-gradient(to right, #24243e, #302b63, #0f0c29); color: white; display: flex; justify-content: center; align-items: center; min-height: 100vh; margin: 0; }
-        .main-card { background: var(--glass); backdrop-filter: blur(25px); border: 1px solid rgba(255,255,255,0.1); padding: 40px; border-radius: 30px; width: 95%; max-width: 500px; text-align: center; box-shadow: 0 8px 32px 0 rgba(0,0,0,0.8); }
-        .tabs { display: flex; gap: 10px; margin-bottom: 25px; background: rgba(0,0,0,0.2); padding: 5px; border-radius: 15px; }
-        .tab { flex: 1; padding: 12px; cursor: pointer; border-radius: 12px; transition: 0.3s; font-weight: 600; border: none; color: white; background: transparent; }
-        .tab.active { background: #4facfe; box-shadow: 0 4px 15px rgba(79, 172, 254, 0.4); }
-        input { width: 100%; padding: 15px; margin: 10px 0; border-radius: 12px; border: 1px solid rgba(255,255,255,0.1); background: rgba(0,0,0,0.2); color: white; font-size: 1rem; box-sizing: border-box; }
-        .action-btn { background: linear-gradient(to right, #4facfe, #00f2fe); color: white; border: none; padding: 18px; width: 100%; border-radius: 12px; font-weight: 600; cursor: pointer; font-size: 1.1rem; margin-top: 20px; transition: 0.3s; }
-        .action-btn:hover { transform: translateY(-3px); box-shadow: 0 10px 20px rgba(0,242,254,0.3); }
-        #qrcode { display: none; }
-        #success-screen { display: none; }
+        body { background: #0f172a; color: white; font-family: 'Inter', sans-serif; }
+        .glass-card { background: rgba(30, 41, 59, 0.7); backdrop-filter: blur(12px); border: 1px solid rgba(255,255,255,0.1); }
+        select option { background: #1e293b; color: white; }
     </style>
 </head>
-<body>
-    <div class="main-card">
-        <div id="reg-box">
-            <h1 style="margin-bottom:5px;">MAITHRI FEST 2026</h1>
-            <p style="font-size: 0.9rem; opacity: 0.7; margin-bottom: 25px;">Secure Registration Portal</p>
-            <div class="tabs">
-                <button class="tab active" id="btnStudent" onclick="switchTab('student')">STUDENT</button>
-                <button class="tab" id="btnVip" onclick="switchTab('vip')">VIP GUEST</button>
-            </div>
-            <input type="text" id="name" placeholder="Full Name">
-            <input type="text" id="mobile" placeholder="10-Digit Mobile Number">
-            <input type="text" id="pin_id" placeholder="PIN No / ID Number">
-            <div id="dynamic-field">
-                <input type="text" id="detail" placeholder="Branch (CSE, B.Tech, etc.)">
-            </div>
-            <button class="action-btn" onclick="submitForm()">CONFIRM & GENERATE PASS</button>
-            <p id="error-msg" style="color:#ff4b2b; margin-top:15px; font-size:0.9rem;"></p>
-        </div>
-        <div id="success-screen">
-            <div style="font-size: 4rem; margin-bottom: 20px;">🏆</div>
-            <h2 id="success-title">WELCOME!</h2>
-            <p id="success-msg"></p>
-            <div id="qrcode"></div>
-            <button class="action-btn" style="background:#4dfa6d; color:#000;" onclick="downloadPDF()">DOWNLOAD E-TICKET (PDF)</button>
-        </div>
+<body class="min-h-screen flex flex-col items-center justify-center p-6">
+    
+    <div class="text-center mb-8">
+        <h1 class="text-4xl font-extrabold tracking-tighter text-blue-400">WELCOME TO MAITHRI 2026</h1>
+        <p class="text-gray-400 mt-2 font-medium uppercase tracking-widest">Experience the Magic | May 8th - 9th, 2026</p>
     </div>
 
-    <script>
-        let currentTab = 'student';
-        let token = "";
+    <div class="glass-card p-8 rounded-2xl w-full max-w-md shadow-2xl">
+        
+        {% if success %}
+        <div class="bg-blue-600/20 border border-blue-500 rounded-xl p-5 mb-6 text-center animate-bounce">
+            <h3 class="text-lg font-bold text-blue-200">Registration Complete!</h3>
+            <p class="text-sm text-gray-300 mb-4 italic">Welcome aboard, {{ name }}</p>
+            <a href="/download_ticket/{{ name }}/{{ pin }}/{{ category }}" 
+               class="bg-blue-500 hover:bg-blue-400 text-white font-bold py-2 px-8 rounded-full shadow-lg transition-all inline-block">
+                DOWNLOAD MY PASS
+            </a>
+        </div>
+        {% endif %}
 
-        function switchTab(type) {
-            currentTab = type;
-            document.getElementById('btnStudent').classList.toggle('active', type === 'student');
-            document.getElementById('btnVip').classList.toggle('active', type === 'vip');
-            document.getElementById('dynamic-field').innerHTML = type === 'student' ? 
-                '<input type="text" id="detail" placeholder="Branch (B.Tech, Pharmacy, etc.)">' :
-                '<input type="text" id="detail" placeholder="Profession (Doctor, Police, etc.)">';
-        }
+        <form action="/register" method="POST" class="space-y-5">
+            <div>
+                <label class="text-xs font-bold text-gray-500 uppercase ml-1">Full Name</label>
+                <input type="text" name="name" required class="w-full bg-slate-800/50 border border-slate-700 p-3 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none transition" placeholder="Enter Name">
+            </div>
 
-        async function submitForm() {
-            const data = {
-                category: currentTab,
-                name: document.getElementById('name').value,
-                mobile: document.getElementById('mobile').value,
-                pin_id: document.getElementById('pin_id').value,
-                detail: document.getElementById('detail').value
-            };
+            <div class="grid grid-cols-2 gap-4">
+                <div>
+                    <label class="text-xs font-bold text-gray-500 uppercase ml-1">PIN / ID</label>
+                    <input type="text" name="pin" required class="w-full bg-slate-800/50 border border-slate-700 p-3 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none" placeholder="Roll No">
+                </div>
+                <div>
+                    <label class="text-xs font-bold text-gray-500 uppercase ml-1">Phone</label>
+                    <input type="text" name="mobile" required class="w-full bg-slate-800/50 border border-slate-700 p-3 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none" placeholder="Mobile">
+                </div>
+            </div>
 
-            const resp = await fetch('/register', {
-                method: 'POST',
-                headers: {'Content-Type': 'application/json'},
-                body: JSON.stringify(data)
-            });
-            const res = await resp.json();
-            
-            if(res.success) {
-                token = res.token;
-                document.getElementById('reg-box').style.display = 'none';
-                document.getElementById('success-screen').style.display = 'block';
-                document.getElementById('success-title').innerText = currentTab === 'student' ? "STUDENT REGISTERED" : "VIP REGISTERED";
-                document.getElementById('success-msg').innerText = `Registration verified for ${data.name}`;
-                new QRCode(document.getElementById("qrcode"), `${window.location.origin}/verify/${token}`);
-            } else {
-                document.getElementById('error-msg').innerText = res.message;
-            }
-        }
+            <div>
+                <label class="text-xs font-bold text-gray-500 uppercase ml-1 text-blue-300">Select Branch</label>
+                <select name="branch" required class="w-full bg-slate-800 border border-slate-700 p-3 rounded-lg outline-none cursor-pointer hover:border-blue-500">
+                    <option value="" disabled selected>-- Choose Branch --</option>
+                    <option value="CSE">Computer Science</option>
+                    <option value="ECE">Electronics</option>
+                    <option value="MECH">Mechanical</option>
+                    <option value="CIVIL">Civil</option>
+                    <option value="EEE">Electrical</option>
+                </select>
+            </div>
 
-        function downloadPDF() {
-            const { jsPDF } = window.jspdf;
-            const doc = new jsPDF('p', 'mm', [100, 150]);
-            const name = document.getElementById('name').value;
-            
-            // Premium Card Design
-            doc.setFillColor(15, 12, 41);
-            doc.rect(0, 0, 100, 150, 'F');
-            doc.setTextColor(255, 255, 255);
-            doc.setFontSize(14);
-            doc.text("MAITHRI FEST 2026", 50, 15, {align: "center"});
-            
-            doc.setDrawColor(79, 172, 254);
-            doc.line(10, 20, 90, 20);
+            <div>
+                <label class="text-xs font-bold text-gray-500 uppercase ml-1">Category</label>
+                <select name="category" required class="w-full bg-slate-800 border border-slate-700 p-3 rounded-lg outline-none cursor-pointer">
+                    <option value="student">Student</option>
+                    <option value="vip">VIP Guest</option>
+                    <option value="volunteer">Volunteer</option>
+                </select>
+            </div>
 
-            if(currentTab === 'vip') {
-                doc.setTextColor(241, 196, 15);
-                doc.text("OFFICIAL VIP PASS", 50, 35, {align: "center"});
-                doc.setTextColor(255, 255, 255);
-                doc.setFontSize(10);
-                doc.text("Thank you for coming to this event Sir/Madam", 50, 45, {align: "center"});
-            } else {
-                doc.setTextColor(79, 172, 254);
-                doc.text("STUDENT DELEGATE", 50, 35, {align: "center"});
-            }
-
-            doc.setTextColor(255, 255, 255);
-            doc.setFontSize(12);
-            doc.text(name.toUpperCase(), 50, 65, {align: "center"});
-            doc.setFontSize(9);
-            doc.text(`ID: ${document.getElementById('pin_id').value}`, 50, 72, {align: "center"});
-
-            const qrCanvas = document.querySelector('#qrcode canvas');
-            doc.addImage(qrCanvas.toDataURL("image/png"), 'PNG', 25, 85, 50, 50);
-            
-            doc.setFontSize(7);
-            doc.text("UNIQUE SECURITY TOKEN VERIFIED", 50, 142, {align: "center"});
-            doc.save(`Maithri_Pass_${name}.pdf`);
-        }
-    </script>
+            <button type="submit" class="w-full bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 py-4 rounded-xl font-bold text-lg shadow-xl active:scale-95 transition-all">
+                GENERATE MY ENTRY PASS
+            </button>
+        </form>
+    </div>
 </body>
 </html>
