@@ -3,53 +3,127 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Maithri 2026</title>
+    <title>Maithri 2026 Portal</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        body { background: linear-gradient(135deg, #4c1d95, #b91c1c, #f59e0b); min-height: 100vh; color: white; font-family: sans-serif; }
-        .glass { background: rgba(255, 255, 255, 0.15); backdrop-filter: blur(12px); border: 1px solid rgba(255, 255, 255, 0.2); border-radius: 20px; }
-        input, select { background: rgba(0,0,0,0.3) !important; border: 1px solid rgba(255,255,255,0.4) !important; color: white !important; font-weight: bold; }
-        input::placeholder { color: #fecaca; }
+        body { 
+            background: linear-gradient(135deg, #4c1d95, #b91c1c, #f59e0b); 
+            min-height: 100vh; 
+            color: white; 
+            font-family: 'Inter', sans-serif;
+        }
+        .glass { 
+            background: rgba(255, 255, 255, 0.12); 
+            backdrop-filter: blur(15px); 
+            border: 1px solid rgba(255, 255, 255, 0.2); 
+            border-radius: 24px; 
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+        }
+        input, select { 
+            background: rgba(0, 0, 0, 0.2) !important; 
+            border: 1px solid rgba(255, 255, 255, 0.3) !important; 
+            color: white !important; 
+            font-weight: 500;
+        }
+        input::placeholder { 
+            color: rgba(255, 255, 255, 0.6); 
+            text-transform: uppercase;
+            font-size: 0.8rem;
+        }
+        .btn-student { background: #2563eb; transition: all 0.3s; }
+        .btn-student:hover { background: #1d4ed8; transform: translateY(-2px); }
+        .btn-vip { background: #eab308; color: black; transition: all 0.3s; }
+        .btn-vip:hover { background: #ca8a04; transform: translateY(-2px); }
     </style>
 </head>
-<body class="p-4 md:p-10">
+<body class="p-4 md:p-12">
+
     <div class="text-center mb-12">
-        <h1 class="text-5xl font-black italic tracking-tighter">MAITHRI 2026</h1>
-        <p class="uppercase tracking-widest text-sm opacity-90 mt-2">March 06 & 07 | Portal</p>
+        <h1 class="text-5xl md:text-7xl font-black tracking-tighter italic mb-2">MAITHRI 2026</h1>
+        <p class="uppercase tracking-[0.4em] text-xs md:text-sm font-bold opacity-80">March 06 & 07 | Official Entry Portal</p>
     </div>
 
-    {% if success %}
-    <div class="max-w-md mx-auto glass p-6 mb-10 text-center border-2 border-white">
-        <h2 class="text-xl font-bold">Success!</h2>
-        <a href="/download_ticket/{{ name }}/{{ val }}/{{ info }}/{{ category }}" class="mt-4 inline-block bg-white text-red-700 px-8 py-3 rounded-full font-black shadow-2xl">Download QR Pass</a>
+    <div class="max-w-4xl mx-auto mb-10">
+        {% if error %}
+        <div class="bg-red-600 border-2 border-white p-6 rounded-2xl text-center shadow-2xl animate-bounce">
+            <h2 class="text-xl font-bold italic">{{ error }}</h2>
+        </div>
+        {% endif %}
+
+        {% if success %}
+        <div class="glass p-8 text-center border-2 border-green-400">
+            <h2 class="text-2xl font-bold mb-2 uppercase">Registration Successful!</h2>
+            <p class="mb-6 opacity-90">Welcome, {{ name }}. Your digital pass is ready for download.</p>
+            <a href="/download_ticket/{{ name }}/{{ val }}/{{ info }}/{{ category }}" 
+               class="inline-block bg-white text-red-700 px-10 py-4 rounded-full font-black text-lg uppercase shadow-xl hover:scale-105 transition">
+               Get My Entry Pass
+            </a>
+        </div>
+        {% endif %}
     </div>
-    {% endif %}
 
     <div class="grid lg:grid-cols-2 gap-10 max-w-6xl mx-auto">
-        <div class="glass p-8">
-            <h2 class="text-2xl font-bold mb-6 text-blue-200 border-b border-white/20 pb-2">STUDENT REGISTRATION</h2>
-            <form action="/register" method="POST" class="space-y-4">
-                <input type="hidden" name="category" value="student">
-                <input type="text" name="name" required placeholder="FULL NAME" class="w-full p-4 rounded-xl outline-none">
-                <input type="text" name="pin" required placeholder="PIN / ROLL NUMBER" class="w-full p-4 rounded-xl outline-none">
-                <select name="branch" required class="w-full p-4 rounded-xl outline-none">
-                    <option value="" disabled selected>SELECT BRANCH</option>
-                    <option>CSE</option><option>ECE</option><option>MECH</option><option>CIVIL</option><option>EEE</option>
-                </select>
-                <button class="w-full bg-blue-600 hover:bg-blue-500 py-4 rounded-xl font-black text-lg shadow-lg">GENERATE STUDENT PASS</button>
-            </form>
+        
+        <div class="glass p-8 flex flex-col justify-between">
+            <div>
+                <h2 class="text-3xl font-black mb-2 text-blue-300 italic">STUDENTS</h2>
+                <p class="text-xs uppercase tracking-widest mb-8 opacity-70">Verify ID & Generate Pass</p>
+                
+                <form action="/register" method="POST" class="space-y-5">
+                    <input type="hidden" name="category" value="student">
+                    <div>
+                        <input type="text" name="name" required placeholder="Full Student Name" class="w-full p-4 rounded-xl outline-none">
+                    </div>
+                    <div>
+                        <input type="text" name="pin" required placeholder="Roll Number / PIN" class="w-full p-4 rounded-xl outline-none">
+                    </div>
+                    <div>
+                        <select name="branch" required class="w-full p-4 rounded-xl outline-none cursor-pointer">
+                            <option value="" disabled selected>Select Your Branch</option>
+                            <option>CSE</option>
+                            <option>ECE</option>
+                            <option>EEE</option>
+                            <option>MECH</option>
+                            <option>CIVIL</option>
+                            <option>AI & DS</option>
+                        </select>
+                    </div>
+                    <button type="submit" class="w-full btn-student py-5 rounded-xl font-black text-xl uppercase tracking-tighter">
+                        Generate Student Pass
+                    </button>
+                </form>
+            </div>
         </div>
 
-        <div class="glass p-8">
-            <h2 class="text-2xl font-bold mb-6 text-yellow-300 border-b border-white/20 pb-2">VIP REGISTRATION</h2>
-            <form action="/register" method="POST" class="space-y-4">
-                <input type="hidden" name="category" value="vip">
-                <input type="text" name="name" required placeholder="FULL NAME" class="w-full p-4 rounded-xl outline-none">
-                <input type="text" name="mobile" required placeholder="MOBILE NUMBER" class="w-full p-4 rounded-xl outline-none">
-                <input type="text" name="job_info" required placeholder="JOB / QUALIFICATION" class="w-full p-4 rounded-xl outline-none">
-                <button class="w-full bg-yellow-500 text-black hover:bg-yellow-400 py-4 rounded-xl font-black text-lg shadow-lg">GENERATE VIP PASS</button>
-            </form>
+        <div class="glass p-8 flex flex-col justify-between border-2 border-yellow-500/30">
+            <div>
+                <h2 class="text-3xl font-black mb-2 text-yellow-400 italic">VIP GUESTS</h2>
+                <p class="text-xs uppercase tracking-widest mb-8 opacity-70">Professional Registration Only</p>
+                
+                <form action="/register" method="POST" class="space-y-5">
+                    <input type="hidden" name="category" value="vip">
+                    <div>
+                        <input type="text" name="name" required placeholder="Full Name" class="w-full p-4 rounded-xl outline-none">
+                    </div>
+                    <div>
+                        <input type="text" name="mobile" required placeholder="Mobile Number" class="w-full p-4 rounded-xl outline-none">
+                    </div>
+                    <div>
+                        <input type="text" name="job_info" required placeholder="Job Name or Qualification (e.g. Software Engineer)" class="w-full p-4 rounded-xl outline-none">
+                    </div>
+                    <button type="submit" class="w-full btn-vip py-5 rounded-xl font-black text-xl uppercase tracking-tighter">
+                        Generate VIP Pass
+                    </button>
+                </form>
+            </div>
+            <p class="mt-4 text-[10px] text-center opacity-50 italic">Note: School/Intermediate qualifications will be automatically rejected.</p>
         </div>
+
     </div>
+
+    <p class="text-center mt-12 text-[10px] uppercase tracking-[0.5em] opacity-40 italic">
+        Maithri 2026 Security Protocol • Digital Entry Verified
+    </p>
+
 </body>
 </html>
