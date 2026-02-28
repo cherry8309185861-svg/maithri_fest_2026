@@ -29,13 +29,23 @@ def register():
     val = request.form.get('pin') if category == 'student' else request.form.get('mobile')
     info = request.form.get('job_info') if category == 'vip' else request.form.get('branch')
 
-    # VIP Qualification Check
+    # STRICT VIP JOB VALIDATION
     if category == 'vip':
-        low_qualifications = ['10th', '12th', 'inter', 'intermediate', 'school', 'ssc', 'tenth']
-        if any(q in info.lower() for q in low_qualifications):
+        # List of high-end/respectful keywords
+        respectful_jobs = [
+            'police', 'doctor', 'engineer', 'politician', 'hero', 'actor', 
+            'collector', 'dsp', 'si', 'judge', 'advocate', 'professor', 
+            'minister', 'ceo', 'manager', 'scientist', 'ias', 'ips'
+        ]
+        
+        # Check if the entered job contains any of the respectful keywords
+        is_valid_vip = any(job in info.lower() for job in respectful_jobs)
+        
+        if not is_valid_vip:
             error_msg = "Sorry, registration unsuccessful. Go to Student Registration and try!"
             return render_template('index.html', error=error_msg)
 
+    # If valid, save to database
     conn = sqlite3.connect('maithri_fest.db')
     cursor = conn.cursor()
     cursor.execute("INSERT INTO users VALUES (?, ?, ?, ?)", (name, val, info, category))
@@ -50,26 +60,24 @@ def download_ticket(name, val, info, category):
     p = canvas.Canvas(buffer, pagesize=A6)
     width, height = A6
     
-    # Red Theme
+    # Pass Design
     p.setFillColorRGB(0.8, 0.2, 0.1)
     p.rect(0, 0, width, height, fill=1)
     p.setFillColorRGB(1, 1, 1)
     
     p.setFont("Helvetica-Bold", 18)
     p.drawCentredString(width/2, height-15*mm, "MAITHRI FEST 2026")
-    p.setFont("Helvetica", 9)
-    p.drawCentredString(width/2, height-21*mm, "MARCH 06 & 07")
-
+    
     p.setFont("Helvetica-Bold", 11)
     msg = "Welcome to the Mythri Fest, Sir!" if category == 'vip' else "Welcome & Enjoy the Fest!"
-    p.drawCentredString(width/2, height-35*mm, msg)
+    p.drawCentredString(width/2, height-30*mm, msg)
 
     p.setFont("Helvetica", 11)
     p.drawString(15*mm, height-55*mm, f"NAME: {name.upper()}")
     p.drawString(15*mm, height-63*mm, f"ID/MOB: {val}")
-    p.drawString(15*mm, height-71*mm, f"INFO: {info.upper()}")
+    p.drawString(15*mm, height-71*mm, f"JOB/BRANCH: {info.upper()}")
 
-    # QR API: Stable and Fail-safe
+    # Fail-safe QR API
     qr_url = f"https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=MAITHRI26-{val}"
     p.drawInlineImage(qr_url, width/2-20*mm, 15*mm, width=40*mm, height=40*mm)
 
