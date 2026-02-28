@@ -3,149 +3,130 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MAITHRI FEST 2026</title>
+    <title>MAITHRI FEST | ELITE PORTAL</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
     <style>
-        body {
-            margin: 0;
-            padding: 0;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), 
-                        url('https://images.unsplash.com/photo-1492684223066-81342ee5ff30'); 
-            background-size: cover;
-            background-position: center;
-            background-attachment: fixed;
-            height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            color: white;
-        }
-
-        .container {
-            background: rgba(255, 255, 255, 0.1);
-            backdrop-filter: blur(15px);
-            padding: 40px;
-            border-radius: 20px;
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            text-align: center;
-            width: 90%;
-            max-width: 500px;
-            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
-        }
-
-        h1 { font-size: 2.5rem; margin-bottom: 20px; letter-spacing: 2px; }
-
-        input, select {
-            width: 100%;
-            padding: 12px;
-            margin: 10px 0;
-            border-radius: 8px;
-            border: none;
-            background: rgba(255, 255, 255, 0.9);
-            font-size: 1rem;
-            box-sizing: border-box;
-        }
-
-        .btn {
-            background: #00d2ff;
-            background: -webkit-linear-gradient(to right, #3a7bd5, #00d2ff);
-            background: linear-gradient(to right, #3a7bd5, #00d2ff);
-            color: white;
-            border: none;
-            padding: 15px;
-            width: 100%;
-            border-radius: 8px;
-            font-weight: bold;
-            cursor: pointer;
-            transition: 0.3s;
-            margin-top: 10px;
-        }
-
-        .btn:hover { transform: scale(1.02); opacity: 0.9; }
-
+        :root { --glass: rgba(255, 255, 255, 0.1); }
+        body { font-family: 'Poppins', sans-serif; background: #0f0c29; background: linear-gradient(to right, #24243e, #302b63, #0f0c29); color: white; display: flex; justify-content: center; align-items: center; min-height: 100vh; margin: 0; }
+        .main-card { background: var(--glass); backdrop-filter: blur(25px); border: 1px solid rgba(255,255,255,0.1); padding: 40px; border-radius: 30px; width: 95%; max-width: 500px; text-align: center; box-shadow: 0 8px 32px 0 rgba(0,0,0,0.8); }
+        .tabs { display: flex; gap: 10px; margin-bottom: 25px; background: rgba(0,0,0,0.2); padding: 5px; border-radius: 15px; }
+        .tab { flex: 1; padding: 12px; cursor: pointer; border-radius: 12px; transition: 0.3s; font-weight: 600; border: none; color: white; background: transparent; }
+        .tab.active { background: #4facfe; box-shadow: 0 4px 15px rgba(79, 172, 254, 0.4); }
+        input { width: 100%; padding: 15px; margin: 10px 0; border-radius: 12px; border: 1px solid rgba(255,255,255,0.1); background: rgba(0,0,0,0.2); color: white; font-size: 1rem; box-sizing: border-box; }
+        .action-btn { background: linear-gradient(to right, #4facfe, #00f2fe); color: white; border: none; padding: 18px; width: 100%; border-radius: 12px; font-weight: 600; cursor: pointer; font-size: 1.1rem; margin-top: 20px; transition: 0.3s; }
+        .action-btn:hover { transform: translateY(-3px); box-shadow: 0 10px 20px rgba(0,242,254,0.3); }
+        #qrcode { display: none; }
         #success-screen { display: none; }
-        .success-card { background: white; color: #333; padding: 20px; border-radius: 10px; margin-top: 20px; }
-        
-        #error-msg { color: #ff4b2b; font-weight: bold; margin-top: 10px; }
-
-        @media print { body { display:none; } }
     </style>
 </head>
 <body>
-
-    <div class="container">
-        <div id="reg-form">
-            <h1>MAITHRI FEST</h1>
-            <input type="text" id="pin" placeholder="enter your pin no">
-            <input type="text" id="mobile" placeholder="Enter Mobile Number">
-            <select id="branch">
-                <option value="">Select Branch</option>
-                <option value="CSE">CSE</option>
-                <option value="AI&ML">AI & ML</option>
-                <option value="DS">Data Science</option>
-                <option value="ECE">ECE</option>
-                <option value="EEE">EEE</option>
-                <option value="MECH">MECH</option>
-                <option value="CIVIL">CIVIL</option>
-                <option value="IT">IT</option>
-                <option value="CSBS">CSBS</option>
-            </select>
-            <button class="btn" onclick="checkEligibility()">REGISTER NOW</button>
-            <p id="error-msg"></p>
-        </div>
-
-        <div id="success-screen">
-            <h2 style="color: #4BB543;">SUCCESS! ✅</h2>
-            <div class="success-card">
-                <p id="status-text" style="font-weight: bold;"></p>
-                <hr>
-                <p><strong>PIN:</strong> <span id="display-pin"></span></p>
+    <div class="main-card">
+        <div id="reg-box">
+            <h1 style="margin-bottom:5px;">MAITHRI FEST 2026</h1>
+            <p style="font-size: 0.9rem; opacity: 0.7; margin-bottom: 25px;">Secure Registration Portal</p>
+            <div class="tabs">
+                <button class="tab active" id="btnStudent" onclick="switchTab('student')">STUDENT</button>
+                <button class="tab" id="btnVip" onclick="switchTab('vip')">VIP GUEST</button>
             </div>
-            <p style="color: #ff4b2b; font-size: 0.8rem; margin-top: 15px;">
-                ⚠️ SCREENSHOTS ARE DISABLED FOR SECURITY
-            </p>
+            <input type="text" id="name" placeholder="Full Name">
+            <input type="text" id="mobile" placeholder="10-Digit Mobile Number">
+            <input type="text" id="pin_id" placeholder="PIN No / ID Number">
+            <div id="dynamic-field">
+                <input type="text" id="detail" placeholder="Branch (CSE, B.Tech, etc.)">
+            </div>
+            <button class="action-btn" onclick="submitForm()">CONFIRM & GENERATE PASS</button>
+            <p id="error-msg" style="color:#ff4b2b; margin-top:15px; font-size:0.9rem;"></p>
+        </div>
+        <div id="success-screen">
+            <div style="font-size: 4rem; margin-bottom: 20px;">🏆</div>
+            <h2 id="success-title">WELCOME!</h2>
+            <p id="success-msg"></p>
+            <div id="qrcode"></div>
+            <button class="action-btn" style="background:#4dfa6d; color:#000;" onclick="downloadPDF()">DOWNLOAD E-TICKET (PDF)</button>
         </div>
     </div>
 
     <script>
-        function checkEligibility() {
-            const pin = document.getElementById('pin').value.trim();
-            const mobile = document.getElementById('mobile').value.trim();
-            const branch = document.getElementById('branch').value;
-            const errorMsg = document.getElementById('error-msg');
+        let currentTab = 'student';
+        let token = "";
 
-            if (!pin || !mobile || !branch) {
-                errorMsg.innerText = "All fields are required!";
-                return;
-            }
+        function switchTab(type) {
+            currentTab = type;
+            document.getElementById('btnStudent').classList.toggle('active', type === 'student');
+            document.getElementById('btnVip').classList.toggle('active', type === 'vip');
+            document.getElementById('dynamic-field').innerHTML = type === 'student' ? 
+                '<input type="text" id="detail" placeholder="Branch (B.Tech, Pharmacy, etc.)">' :
+                '<input type="text" id="detail" placeholder="Profession (Doctor, Police, etc.)">';
+        }
 
-            const start = pin.substring(0, 2);
-            const allowed = ["23", "24", "25", "26", "27", "28"];
-            
-            if (!allowed.includes(start)) {
-                errorMsg.innerText = "You are not eligible for this fest.";
-                return;
-            }
+        async function submitForm() {
+            const data = {
+                category: currentTab,
+                name: document.getElementById('name').value,
+                mobile: document.getElementById('mobile').value,
+                pin_id: document.getElementById('pin_id').value,
+                detail: document.getElementById('detail').value
+            };
 
-            fetch('/register', {
+            const resp = await fetch('/register', {
                 method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ pin: pin, mobile: mobile, branch: branch })
-            })
-            .then(res => res.json())
-            .then(data => {
-                if (data.success) {
-                    document.getElementById('reg-form').style.display = 'none';
-                    document.getElementById('success-screen').style.display = 'block';
-                    document.getElementById('status-text').innerText = data.message;
-                    document.getElementById('display-pin').innerText = pin;
-                } else {
-                    errorMsg.innerText = data.message;
-                }
-            })
-            .catch(err => {
-                errorMsg.innerText = "Server error. Please try again.";
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify(data)
             });
+            const res = await resp.json();
+            
+            if(res.success) {
+                token = res.token;
+                document.getElementById('reg-box').style.display = 'none';
+                document.getElementById('success-screen').style.display = 'block';
+                document.getElementById('success-title').innerText = currentTab === 'student' ? "STUDENT REGISTERED" : "VIP REGISTERED";
+                document.getElementById('success-msg').innerText = `Registration verified for ${data.name}`;
+                new QRCode(document.getElementById("qrcode"), `${window.location.origin}/verify/${token}`);
+            } else {
+                document.getElementById('error-msg').innerText = res.message;
+            }
+        }
+
+        function downloadPDF() {
+            const { jsPDF } = window.jspdf;
+            const doc = new jsPDF('p', 'mm', [100, 150]);
+            const name = document.getElementById('name').value;
+            
+            // Premium Card Design
+            doc.setFillColor(15, 12, 41);
+            doc.rect(0, 0, 100, 150, 'F');
+            doc.setTextColor(255, 255, 255);
+            doc.setFontSize(14);
+            doc.text("MAITHRI FEST 2026", 50, 15, {align: "center"});
+            
+            doc.setDrawColor(79, 172, 254);
+            doc.line(10, 20, 90, 20);
+
+            if(currentTab === 'vip') {
+                doc.setTextColor(241, 196, 15);
+                doc.text("OFFICIAL VIP PASS", 50, 35, {align: "center"});
+                doc.setTextColor(255, 255, 255);
+                doc.setFontSize(10);
+                doc.text("Thank you for coming to this event Sir/Madam", 50, 45, {align: "center"});
+            } else {
+                doc.setTextColor(79, 172, 254);
+                doc.text("STUDENT DELEGATE", 50, 35, {align: "center"});
+            }
+
+            doc.setTextColor(255, 255, 255);
+            doc.setFontSize(12);
+            doc.text(name.toUpperCase(), 50, 65, {align: "center"});
+            doc.setFontSize(9);
+            doc.text(`ID: ${document.getElementById('pin_id').value}`, 50, 72, {align: "center"});
+
+            const qrCanvas = document.querySelector('#qrcode canvas');
+            doc.addImage(qrCanvas.toDataURL("image/png"), 'PNG', 25, 85, 50, 50);
+            
+            doc.setFontSize(7);
+            doc.text("UNIQUE SECURITY TOKEN VERIFIED", 50, 142, {align: "center"});
+            doc.save(`Maithri_Pass_${name}.pdf`);
         }
     </script>
 </body>
