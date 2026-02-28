@@ -1,11 +1,12 @@
 import os
 import sqlite3
 import io
-import qrcode
 from flask import Flask, render_template, request, send_file
 from reportlab.pdfgen import canvas
 from reportlab.lib.pagesizes import A6
 from reportlab.lib.units import mm
+# We use a simpler QR library to avoid the Pillow dependency
+import qrcode
 
 app = Flask(__name__)
 
@@ -44,6 +45,7 @@ def download_ticket(name, val, info, category):
     p = canvas.Canvas(buffer, pagesize=A6)
     width, height = A6
     
+    # Sunset Theme
     p.setFillColorRGB(0.8, 0.2, 0.1)
     p.rect(0, 0, width, height, fill=1)
     p.setFillColorRGB(1, 1, 1)
@@ -54,7 +56,7 @@ def download_ticket(name, val, info, category):
     p.drawCentredString(width/2, height-21*mm, "MARCH 06 & 07")
 
     p.setFont("Helvetica-Bold", 11)
-    msg = "Welcome to the Mythri Fest, Sir!" if category == 'vip' else "Welcome & Enjoy the Fest!"
+    msg = "Welcome to the Mythri Fest, Sir!" if category == 'vip' else "Welcome to the Maithri Fest and Enjoy the Fest!"
     p.drawCentredString(width/2, height-35*mm, msg)
 
     p.setFont("Helvetica", 11)
@@ -62,30 +64,28 @@ def download_ticket(name, val, info, category):
     p.drawString(15*mm, height-63*mm, f"ID/MOB: {val}")
     p.drawString(15*mm, height-71*mm, f"INFO: {info.upper()}")
 
-    # Stable QR Generation
-    qr = qrcode.QRCode(box_size=10, border=2)
-    qr.add_data(f"MAITHRI2026-{category}-{val}")
+    # Generate QR data
+    qr = qrcode.QRCode(box_size=1, border=1)
+    qr.add_data(f"MAITHRI26-{category}-{val}")
     qr.make(fit=True)
-    img = qr.make_image(fill_color="black", back_color="white")
+    matrix = qr.get_matrix()
     
-    qr_buffer = io.BytesIO()
-    img.save(qr_buffer)
-    qr_buffer.seek(0)
-    p.drawInlineImage(qr_buffer, width/2-22*mm, 10*mm, width=45*mm, height=45*mm)
+    # Draw QR manually with squares to avoid Pillow dependency
+    p.setFillColorRGB(0, 0, 0)
+    size = len(matrix)
+    pixel_size = 1.2 * mm 
+    origin_x = width/2 - (size * pixel_size)/2
+    origin_y = 15 * mm
+
+    for r, row in enumerate(matrix):
+        for c, value in enumerate(row):
+            if value:
+                p.rect(origin_x + c*pixel_size, origin_y + (size-r)*pixel_size, pixel_size, pixel_size, fill=1, stroke=0)
 
     p.showPage()
     p.save()
     buffer.seek(0)
     return send_file(buffer, as_attachment=True, download_name=f"Pass_{val}.pdf", mimetype='application/pdf')
-
-@app.route('/dashboard')
-def dashboard():
-    conn = sqlite3.connect('maithri_fest.db')
-    cursor = conn.cursor()
-    cursor.execute("SELECT * FROM users")
-    students = cursor.fetchall()
-    conn.close()
-    return render_template('dashboard.html', students=students)
 
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 10000))
