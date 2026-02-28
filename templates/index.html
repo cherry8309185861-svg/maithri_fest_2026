@@ -3,39 +3,83 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Maithri 2026</title>
+    <title>Maithri 2026 Registration</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        body { background: #0f172a; color: white; font-family: 'Inter', sans-serif; }
-        .glass-card { background: rgba(30, 41, 59, 0.7); backdrop-filter: blur(12px); border: 1px solid rgba(255,255,255,0.1); }
-        select option { background: #1e293b; }
+        body { 
+            background: linear-gradient(to bottom right, #4c1d95, #b91c1c, #f59e0b); 
+            min-height: 100vh; 
+            display: flex; 
+            align-items: center; 
+            justify-content: center;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            padding: 20px;
+        }
+        .main-card { 
+            background: rgba(255, 255, 255, 0.15); 
+            backdrop-filter: blur(15px); 
+            border-radius: 20px; 
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            width: 100%;
+            max-width: 450px;
+            padding: 30px;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+        }
+        input, select {
+            background: rgba(255, 255, 255, 0.2) !important;
+            border: 1px solid rgba(255, 255, 255, 0.3) !important;
+            color: white !important;
+            border-radius: 10px !important;
+        }
+        input::placeholder { color: rgba(255, 255, 255, 0.7); }
+        option { background: #b91c1c; color: white; }
     </style>
 </head>
-<body class="min-h-screen flex flex-col items-center justify-center p-6 text-center">
-    
-    <div class="mb-8">
-        <h1 class="text-4xl font-black text-blue-500 tracking-tighter">WELCOME TO MAITHRI 2026</h1>
-        <p class="text-gray-400 mt-2 font-bold uppercase tracking-widest text-sm">March 6th & 7th, 2026</p>
-    </div>
+<body>
+    <div class="main-card text-center text-white">
+        <h1 class="text-3xl font-bold mb-1">Maithri Fest 2026</h1>
+        <p class="text-sm opacity-80 mb-6 uppercase tracking-widest">March 6th & 7th, 2026</p>
 
-    <div class="glass-card p-8 rounded-3xl w-full max-w-md shadow-2xl text-left">
         {% if success %}
-        <div class="bg-blue-600/20 border border-blue-500 rounded-xl p-5 mb-6 text-center">
-            <h3 class="text-lg font-bold text-blue-200">Registration Success!</h3>
-            <p class="text-sm text-gray-300 mb-4 italic">See you on March 6th, {{ name }}!</p>
+        <div class="bg-white text-red-700 p-4 rounded-xl mb-6 shadow-lg">
+            <p class="font-bold">Welcome, {{ name }}!</p>
+            <p class="text-xs mb-3">Your ID: {{ pin }}</p>
             <a href="/download_ticket/{{ name }}/{{ pin }}/{{ category }}" 
-               class="bg-blue-500 hover:bg-blue-400 text-white font-bold py-2 px-8 rounded-full shadow-lg transition-all inline-block">
-                DOWNLOAD MY PASS
+               class="inline-block bg-red-600 text-white font-bold py-2 px-6 rounded-lg hover:bg-red-700 transition">
+               Download Entry Pass
             </a>
         </div>
         {% endif %}
 
         <form action="/register" method="POST" class="space-y-4">
-            <div>
-                <label class="text-xs font-bold text-gray-500 uppercase ml-1">Full Name</label>
-                <input type="text" name="name" required class="w-full bg-slate-800/50 border border-slate-700 p-3 rounded-xl focus:ring-2 focus:ring-blue-500 outline-none" placeholder="Your Name">
+            <input type="text" name="name" required placeholder="STUDENT FULL NAME" class="w-full p-3 outline-none">
+            
+            <div class="flex gap-2">
+                <input type="text" name="pin" required placeholder="PIN / ROLL NO" class="w-1/2 p-3 outline-none">
+                <input type="text" name="mobile" required placeholder="MOBILE NO" class="w-1/2 p-3 outline-none">
             </div>
 
-            <div class="grid grid-cols-2 gap-4">
-                <div>
-                    <label
+            <select name="branch" required class="w-full p-3 outline-none cursor-pointer">
+                <option value="" disabled selected>SELECT YOUR BRANCH</option>
+                <option value="CSE">Computer Science</option>
+                <option value="ECE">Electronics</option>
+                <option value="MECH">Mechanical</option>
+                <option value="CIVIL">Civil</option>
+                <option value="EEE">Electrical</option>
+            </select>
+
+            <select name="category" required class="w-full p-3 outline-none cursor-pointer">
+                <option value="student">NORMAL STUDENT</option>
+                <option value="vip">VIP GUEST / CIP</option>
+                <option value="volunteer">VOLUNTEER</option>
+            </select>
+
+            <button type="submit" class="w-full bg-white text-red-700 font-bold py-4 rounded-xl shadow-lg hover:bg-gray-100 transition-all active:scale-95 text-lg uppercase">
+                Register & Generate Pass
+            </button>
+        </form>
+
+        <p class="mt-6 text-[10px] opacity-60 uppercase">Developed for Maithri 2026 | Admission subject to ID verification</p>
+    </div>
+</body>
+</html>
