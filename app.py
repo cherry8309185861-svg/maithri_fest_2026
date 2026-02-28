@@ -67,6 +67,17 @@ def download_ticket(name, pin, category):
     buffer.seek(0)
     return send_file(buffer, as_attachment=True, download_name=f"Maithri_Pass_{pin}.pdf", mimetype='application/pdf')
 
+# ADDED DASHBOARD ROUTE TO VIEW ALL DETAILS
+@app.route('/dashboard')
+def dashboard():
+    conn = sqlite3.connect('maithri_fest.db')
+    cursor = conn.cursor()
+    # Fetching all columns to show student/VIP details
+    cursor.execute("SELECT name, pin, mobile, branch, category FROM users")
+    students = cursor.fetchall()
+    conn.close()
+    return render_template('dashboard.html', students=students)
+
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 10000))
     app.run(host='0.0.0.0', port=port)
