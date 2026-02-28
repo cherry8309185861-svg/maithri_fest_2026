@@ -6,48 +6,48 @@
     <title>Maithri 2026 Portal</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        body { background: linear-gradient(135deg, #4c1d95, #b91c1c, #f59e0b); min-height: 100vh; color: white; }
-        .glass { background: rgba(255, 255, 255, 0.15); backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.2); border-radius: 20px; }
-        input, select { background: rgba(0,0,0,0.2) !important; border: 1px solid rgba(255,255,255,0.4) !important; color: white !important; }
-        input::placeholder { color: #fca5a5; font-weight: bold; }
+        body { background: linear-gradient(135deg, #4c1d95, #b91c1c, #f59e0b); min-height: 100vh; color: white; font-family: sans-serif; }
+        .glass { background: rgba(255, 255, 255, 0.15); backdrop-filter: blur(12px); border: 1px solid rgba(255, 255, 255, 0.2); border-radius: 20px; }
+        input, select { background: rgba(0,0,0,0.3) !important; border: 1px solid rgba(255,255,255,0.4) !important; color: white !important; font-weight: bold; }
+        input::placeholder { color: #fecaca; }
     </style>
 </head>
 <body class="p-4 md:p-10">
-    <div class="text-center mb-10">
+    <div class="text-center mb-12">
         <h1 class="text-5xl font-black tracking-tighter italic">MAITHRI 2026</h1>
-        <p class="uppercase tracking-[0.3em] text-sm opacity-90 mt-2">March 06 & 07 | Gate Entry Portal</p>
+        <p class="uppercase tracking-widest text-sm opacity-90 mt-2">March 06 & 07 | Entry Gate Portal</p>
     </div>
 
     {% if success %}
-    <div class="max-w-md mx-auto glass p-6 mb-10 text-center border-2 border-white animate-pulse">
-        <h2 class="text-2xl font-bold">Registration Successful!</h2>
-        <a href="/download_ticket/{{ name }}/{{ val }}/{{ info }}/{{ category }}" class="mt-4 inline-block bg-white text-red-700 px-8 py-3 rounded-full font-black uppercase shadow-2xl">Download QR Pass</a>
+    <div class="max-w-md mx-auto glass p-6 mb-10 text-center border-2 border-white animate-bounce">
+        <h2 class="text-xl font-bold">Registration Successful!</h2>
+        <a href="/download_ticket/{{ name }}/{{ val }}/{{ info }}/{{ category }}" class="mt-4 inline-block bg-white text-red-700 px-8 py-3 rounded-full font-black shadow-2xl">Download QR Pass</a>
     </div>
     {% endif %}
 
-    <div class="grid md:grid-cols-2 gap-8 max-w-6xl mx-auto">
-        <div class="glass p-8 shadow-2xl">
-            <h2 class="text-2xl font-bold mb-6 border-b border-white/20 pb-2 text-blue-200">STUDENT REGISTRATION</h2>
+    <div class="grid lg:grid-cols-2 gap-10 max-w-6xl mx-auto">
+        <div class="glass p-8">
+            <h2 class="text-2xl font-bold mb-6 text-blue-200 border-b border-white/20 pb-2">STUDENT REGISTRATION</h2>
             <form action="/register" method="POST" class="space-y-4">
                 <input type="hidden" name="category" value="student">
-                <input type="text" name="name" required placeholder="FULL NAME" class="w-full p-4 rounded-xl outline-none focus:ring-2 ring-white">
-                <input type="text" name="pin" required placeholder="PIN NUMBER / ROLL NO" class="w-full p-4 rounded-xl outline-none">
+                <input type="text" name="name" required placeholder="FULL NAME" class="w-full p-4 rounded-xl outline-none">
+                <input type="text" name="pin" required placeholder="PIN / ROLL NUMBER" class="w-full p-4 rounded-xl outline-none">
                 <select name="branch" required class="w-full p-4 rounded-xl outline-none">
                     <option value="" disabled selected>SELECT BRANCH</option>
-                    <option>CSE</option><option>ECE</option><option>EEE</option><option>MECH</option><option>CIVIL</option>
+                    <option>CSE</option><option>ECE</option><option>MECH</option><option>CIVIL</option><option>EEE</option>
                 </select>
-                <button class="w-full bg-blue-600 hover:bg-blue-500 py-4 rounded-xl font-black text-lg shadow-lg transition">GENERATE STUDENT PASS</button>
+                <button class="w-full bg-blue-600 hover:bg-blue-500 py-4 rounded-xl font-black text-lg shadow-lg">GENERATE STUDENT PASS</button>
             </form>
         </div>
 
-        <div class="glass p-8 shadow-2xl">
-            <h2 class="text-2xl font-bold mb-6 border-b border-white/20 pb-2 text-yellow-300">VIP / CIP REGISTRATION</h2>
+        <div class="glass p-8">
+            <h2 class="text-2xl font-bold mb-6 text-yellow-300 border-b border-white/20 pb-2">VIP / CIP REGISTRATION</h2>
             <form action="/register" method="POST" class="space-y-4">
                 <input type="hidden" name="category" value="vip">
-                <input type="text" name="name" required placeholder="FULL NAME" class="w-full p-4 rounded-xl outline-none focus:ring-2 ring-white">
+                <input type="text" name="name" required placeholder="FULL NAME" class="w-full p-4 rounded-xl outline-none">
                 <input type="text" name="mobile" required placeholder="MOBILE NUMBER" class="w-full p-4 rounded-xl outline-none">
-                <input type="text" name="job_info" required placeholder="QUALIFICATION (B.Tech+) or JOB (e.g. Software Engineer)" class="w-full p-4 rounded-xl outline-none">
-                <button class="w-full bg-yellow-500 hover:bg-yellow-400 text-black py-4 rounded-xl font-black text-lg shadow-lg transition">GENERATE VIP PASS</button>
+                <input type="text" name="job_info" required placeholder="JOB / QUALIFICATION (e.g. Software Engineer)" class="w-full p-4 rounded-xl outline-none">
+                <button class="w-full bg-yellow-500 text-black hover:bg-yellow-400 py-4 rounded-xl font-black text-lg shadow-lg">GENERATE VIP PASS</button>
             </form>
         </div>
     </div>
