@@ -1,6 +1,7 @@
 import os
 import sqlite3
 import io
+import qrcode
 from flask import Flask, render_template, request, send_file
 from reportlab.pdfgen import canvas
 from reportlab.lib.pagesizes import A6
@@ -12,7 +13,7 @@ def init_db():
     conn = sqlite3.connect('maithri_fest.db')
     cursor = conn.cursor()
     cursor.execute('''CREATE TABLE IF NOT EXISTS users 
-                      (name TEXT, pin TEXT, mobile TEXT, branch TEXT, category TEXT)''')
+                      (name TEXT, pin_or_mobile TEXT, branch_or_job TEXT, category TEXT)''')
     conn.commit()
     conn.close()
 
@@ -24,59 +25,68 @@ def index():
 
 @app.route('/register', methods=['POST'])
 def register():
-    name = request.form.get('name')
-    pin = request.form.get('pin')
-    mobile = request.form.get('mobile')
-    branch = request.form.get('branch')
     category = request.form.get('category')
+    name = request.form.get('name')
+    
+    if category == 'student':
+        val = request.form.get('pin')
+        info = request.form.get('branch')
+    else:
+        val = request.form.get('mobile')
+        info = request.form.get('job_info')
 
     conn = sqlite3.connect('maithri_fest.db')
     cursor = conn.cursor()
-    cursor.execute("INSERT INTO users VALUES (?, ?, ?, ?, ?)", (name, pin, mobile, branch, category))
+    cursor.execute("INSERT INTO users VALUES (?, ?, ?, ?)", (name, val, info, category))
     conn.commit()
     conn.close()
 
-    return render_template('index.html', success=True, name=name, pin=pin, category=category)
+    return render_template('index.html', success=True, name=name, val=val, info=info, category=category)
 
-@app.route('/download_ticket/<name>/<pin>/<category>')
-def download_ticket(name, pin, category):
+@app.route('/download_ticket/<name>/<val>/<info>/<category>')
+def download_ticket(name, val, info, category):
     buffer = io.BytesIO()
     p = canvas.Canvas(buffer, pagesize=A6)
     width, height = A6
     
-    # Official Ticket Design
-    p.setFillColorRGB(0.7, 0.1, 0.1) # Red background
+    # Background Design (Sunset Red)
+    p.setFillColorRGB(0.8, 0.2, 0.1)
     p.rect(0, 0, width, height, fill=1)
-    
     p.setFillColorRGB(1, 1, 1)
-    p.setFont("Helvetica-Bold", 18)
-    p.drawCentredString(width/2, height-25*mm, "MAITHRI 2026")
+    
+    # Header
+    p.setFont("Helvetica-Bold", 16)
+    p.drawCentredString(width/2, height-15*mm, "MAITHRI FEST 2026")
+    p.setFont("Helvetica", 8)
+    p.drawCentredString(width/2, height-20*mm, "MARCH 06 & 07")
+
+    # Message based on category
+    p.setFont("Helvetica-Bold", 10)
+    if category == 'vip':
+        msg = f"Welcome to the Maithri Fest, Sir!"
+    else:
+        msg = f"Welcome to Maithri Fest and Enjoy the Fest!"
+    p.drawCentredString(width/2, height-30*mm, msg)
+
+    # Details
     p.setFont("Helvetica", 10)
-    p.drawCentredString(width/2, height-32*mm, "March 6th & 7th, 2026")
+    p.drawString(15*mm, height-45*mm, f"NAME: {name.upper()}")
+    p.drawString(15*mm, height-52*mm, f"ID/MOB: {val}")
+    p.drawString(15*mm, height-59*mm, f"INFO: {info.upper()}")
+
+    # QR Code Generation
+    qr_data = f"Maithri2026|{category}|{name}|{val}"
+    qr = qrcode.make(qr_data)
+    qr_img_buffer = io.BytesIO()
+    qr.save(qr_img_buffer, format='PNG')
+    qr_img_buffer.seek(0)
     
-    p.setStrokeColorRGB(1, 1, 1)
-    p.line(15*mm, height-40*mm, width-15*mm, height-40*mm)
-    
-    p.setFont("Helvetica-Bold", 12)
-    p.drawString(20*mm, height-60*mm, f"NAME: {name.upper()}")
-    p.drawString(20*mm, height-70*mm, f"ID/PIN: {pin}")
-    p.drawString(20*mm, height-80*mm, f"TYPE: {category.upper()}")
-    
+    p.drawInlineImage(qr_img_buffer, width/2-20*mm, 15*mm, width=40*mm, height=40*mm)
+
     p.showPage()
     p.save()
     buffer.seek(0)
-    return send_file(buffer, as_attachment=True, download_name=f"Maithri_Pass_{pin}.pdf", mimetype='application/pdf')
-
-# ADDED DASHBOARD ROUTE TO VIEW ALL DETAILS
-@app.route('/dashboard')
-def dashboard():
-    conn = sqlite3.connect('maithri_fest.db')
-    cursor = conn.cursor()
-    # Fetching all columns to show student/VIP details
-    cursor.execute("SELECT name, pin, mobile, branch, category FROM users")
-    students = cursor.fetchall()
-    conn.close()
-    return render_template('dashboard.html', students=students)
+    return send_file(buffer, as_attachment=True, download_name=f"Pass_{name}.pdf", mimetype='application/pdf')
 
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 10000))
