@@ -1,6 +1,6 @@
 import os
 import sqlite3
-import io  # This must be on its own line
+import io
 from flask import Flask, render_template, request, send_file
 from reportlab.pdfgen import canvas
 from reportlab.lib.pagesizes import A6
@@ -44,8 +44,8 @@ def download_ticket(name, pin, category):
     p = canvas.Canvas(buffer, pagesize=A6)
     width, height = A6
     
-    # Maithri 2026 Ticket Design
-    p.setFillColorRGB(0.05, 0.1, 0.25)
+    # Official Ticket Design
+    p.setFillColorRGB(0.7, 0.1, 0.1) # Red background
     p.rect(0, 0, width, height, fill=1)
     
     p.setFillColorRGB(1, 1, 1)
@@ -59,7 +59,7 @@ def download_ticket(name, pin, category):
     
     p.setFont("Helvetica-Bold", 12)
     p.drawString(20*mm, height-60*mm, f"NAME: {name.upper()}")
-    p.drawString(20*mm, height-70*mm, f"ID: {pin}")
+    p.drawString(20*mm, height-70*mm, f"ID/PIN: {pin}")
     p.drawString(20*mm, height-80*mm, f"TYPE: {category.upper()}")
     
     p.showPage()
@@ -68,6 +68,5 @@ def download_ticket(name, pin, category):
     return send_file(buffer, as_attachment=True, download_name=f"Maithri_Pass_{pin}.pdf", mimetype='application/pdf')
 
 if __name__ == "__main__":
-    # Critical Port Binding for Render
     port = int(os.environ.get("PORT", 10000))
     app.run(host='0.0.0.0', port=port)
