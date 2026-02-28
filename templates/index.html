@@ -3,127 +3,100 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Maithri 2026 Portal</title>
+    <title>Maithri 2026 | GGU Rajamahendravaram</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         body { 
-            background: linear-gradient(135deg, #4c1d95, #b91c1c, #f59e0b); 
+            /* Using the GGU Maithri Image as Background */
+            background: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url('https://lookaside.instagram.com/seo/google_widget/crawler/?media_id=3839569844724000902');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
             min-height: 100vh; 
             color: white; 
-            font-family: 'Inter', sans-serif;
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
         }
-        .glass { 
-            background: rgba(255, 255, 255, 0.12); 
+        .glass-card { 
+            background: rgba(255, 255, 255, 0.1); 
             backdrop-filter: blur(15px); 
             border: 1px solid rgba(255, 255, 255, 0.2); 
-            border-radius: 24px; 
-            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+            border-radius: 20px; 
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.5);
         }
-        input, select { 
-            background: rgba(0, 0, 0, 0.2) !important; 
-            border: 1px solid rgba(255, 255, 255, 0.3) !important; 
-            color: white !important; 
-            font-weight: 500;
+        .highlight-header {
+            text-shadow: 3px 3px 15px rgba(0, 0, 0, 0.9);
+            font-weight: 900;
         }
-        input::placeholder { 
-            color: rgba(255, 255, 255, 0.6); 
-            text-transform: uppercase;
-            font-size: 0.8rem;
+        .input-field {
+            background: rgba(0, 0, 0, 0.6) !important;
+            border: 1px solid rgba(255, 255, 255, 0.4) !important;
+            color: white !important;
+            border-radius: 12px !important;
         }
-        .btn-student { background: #2563eb; transition: all 0.3s; }
-        .btn-student:hover { background: #1d4ed8; transform: translateY(-2px); }
-        .btn-vip { background: #eab308; color: black; transition: all 0.3s; }
-        .btn-vip:hover { background: #ca8a04; transform: translateY(-2px); }
+        .input-field::placeholder {
+            color: rgba(255, 255, 255, 0.7);
+        }
     </style>
 </head>
-<body class="p-4 md:p-12">
+<body class="p-6 md:p-12">
 
-    <div class="text-center mb-12">
-        <h1 class="text-5xl md:text-7xl font-black tracking-tighter italic mb-2">MAITHRI 2026</h1>
-        <p class="uppercase tracking-[0.4em] text-xs md:text-sm font-bold opacity-80">March 06 & 07 | Official Entry Portal</p>
+    <div class="text-center mb-10">
+        <h1 class="text-5xl md:text-7xl highlight-header italic uppercase italic">MAITHRI 2026</h1>
+        <p class="text-lg md:text-xl font-bold tracking-widest highlight-header bg-red-600/60 inline-block px-6 py-1 rounded-full mt-2">
+            GGU RAJAMAHENDRAVARAM | MARCH 6, 7
+        </p>
     </div>
 
-    <div class="max-w-4xl mx-auto mb-10">
+    <div class="max-w-4xl mx-auto mb-8">
         {% if error %}
-        <div class="bg-red-600 border-2 border-white p-6 rounded-2xl text-center shadow-2xl animate-bounce">
-            <h2 class="text-xl font-bold italic">{{ error }}</h2>
+        <div class="bg-red-700 border-2 border-white p-5 rounded-xl text-center shadow-2xl animate-pulse">
+            <h2 class="text-lg font-bold">{{ error }}</h2>
         </div>
         {% endif %}
 
         {% if success %}
-        <div class="glass p-8 text-center border-2 border-green-400">
-            <h2 class="text-2xl font-bold mb-2 uppercase">Registration Successful!</h2>
-            <p class="mb-6 opacity-90">Welcome, {{ name }}. Your digital pass is ready for download.</p>
+        <div class="glass-card p-8 text-center border-2 border-green-500">
+            <h2 class="text-2xl font-bold mb-4 highlight-header uppercase">Registration Successful!</h2>
             <a href="/download_ticket/{{ name }}/{{ val }}/{{ info }}/{{ category }}" 
-               class="inline-block bg-white text-red-700 px-10 py-4 rounded-full font-black text-lg uppercase shadow-xl hover:scale-105 transition">
-               Get My Entry Pass
+               class="inline-block bg-white text-red-700 px-12 py-4 rounded-full font-black text-lg uppercase shadow-2xl hover:bg-gray-100 transition">
+               Download Your Pass
             </a>
         </div>
         {% endif %}
     </div>
 
-    <div class="grid lg:grid-cols-2 gap-10 max-w-6xl mx-auto">
+    <div class="grid lg:grid-cols-2 gap-8 max-w-6xl mx-auto">
         
-        <div class="glass p-8 flex flex-col justify-between">
-            <div>
-                <h2 class="text-3xl font-black mb-2 text-blue-300 italic">STUDENTS</h2>
-                <p class="text-xs uppercase tracking-widest mb-8 opacity-70">Verify ID & Generate Pass</p>
-                
-                <form action="/register" method="POST" class="space-y-5">
-                    <input type="hidden" name="category" value="student">
-                    <div>
-                        <input type="text" name="name" required placeholder="Full Student Name" class="w-full p-4 rounded-xl outline-none">
-                    </div>
-                    <div>
-                        <input type="text" name="pin" required placeholder="Roll Number / PIN" class="w-full p-4 rounded-xl outline-none">
-                    </div>
-                    <div>
-                        <select name="branch" required class="w-full p-4 rounded-xl outline-none cursor-pointer">
-                            <option value="" disabled selected>Select Your Branch</option>
-                            <option>CSE</option>
-                            <option>ECE</option>
-                            <option>EEE</option>
-                            <option>MECH</option>
-                            <option>CIVIL</option>
-                            <option>AI & DS</option>
-                        </select>
-                    </div>
-                    <button type="submit" class="w-full btn-student py-5 rounded-xl font-black text-xl uppercase tracking-tighter">
-                        Generate Student Pass
-                    </button>
-                </form>
-            </div>
+        <div class="glass-card p-8 border-b-8 border-blue-600">
+            <h2 class="text-3xl font-black mb-6 text-blue-400 italic highlight-header uppercase">Student Portal</h2>
+            <form action="/register" method="POST" class="space-y-4">
+                <input type="hidden" name="category" value="student">
+                <input type="text" name="name" required placeholder="STUDENT FULL NAME" class="input-field w-full p-4 outline-none">
+                <input type="text" name="pin" required placeholder="PIN / ROLL NUMBER" class="input-field w-full p-4 outline-none">
+                <select name="branch" required class="input-field w-full p-4 outline-none">
+                    <option value="" disabled selected>SELECT YOUR BRANCH</option>
+                    <option>CSE</option><option>ECE</option><option>MECH</option><option>CIVIL</option><option>EEE</option><option>AI & DS</option>
+                </select>
+                <button type="submit" class="w-full bg-blue-600 py-4 rounded-xl font-black text-xl hover:bg-blue-700 shadow-lg">GENERATE PASS</button>
+            </form>
         </div>
 
-        <div class="glass p-8 flex flex-col justify-between border-2 border-yellow-500/30">
-            <div>
-                <h2 class="text-3xl font-black mb-2 text-yellow-400 italic">VIP GUESTS</h2>
-                <p class="text-xs uppercase tracking-widest mb-8 opacity-70">Professional Registration Only</p>
-                
-                <form action="/register" method="POST" class="space-y-5">
-                    <input type="hidden" name="category" value="vip">
-                    <div>
-                        <input type="text" name="name" required placeholder="Full Name" class="w-full p-4 rounded-xl outline-none">
-                    </div>
-                    <div>
-                        <input type="text" name="mobile" required placeholder="Mobile Number" class="w-full p-4 rounded-xl outline-none">
-                    </div>
-                    <div>
-                        <input type="text" name="job_info" required placeholder="Job Name or Qualification (e.g. Software Engineer)" class="w-full p-4 rounded-xl outline-none">
-                    </div>
-                    <button type="submit" class="w-full btn-vip py-5 rounded-xl font-black text-xl uppercase tracking-tighter">
-                        Generate VIP Pass
-                    </button>
-                </form>
-            </div>
-            <p class="mt-4 text-[10px] text-center opacity-50 italic">Note: School/Intermediate qualifications will be automatically rejected.</p>
+        <div class="glass-card p-8 border-b-8 border-yellow-500">
+            <h2 class="text-3xl font-black mb-6 text-yellow-400 italic highlight-header uppercase">VIP Portal</h2>
+            <form action="/register" method="POST" class="space-y-4">
+                <input type="hidden" name="category" value="vip">
+                <input type="text" name="name" required placeholder="FULL NAME" class="input-field w-full p-4 outline-none">
+                <input type="text" name="mobile" required placeholder="MOBILE NUMBER" class="input-field w-full p-4 outline-none">
+                <input type="text" name="job_info" required placeholder="RESPECTFUL JOB (e.g. Police, Doctor, Hero)" class="input-field w-full p-4 outline-none">
+                <button type="submit" class="w-full bg-yellow-500 text-black py-4 rounded-xl font-black text-xl hover:bg-yellow-600 shadow-lg">GENERATE VIP PASS</button>
+            </form>
         </div>
 
     </div>
 
-    <p class="text-center mt-12 text-[10px] uppercase tracking-[0.5em] opacity-40 italic">
-        Maithri 2026 Security Protocol • Digital Entry Verified
-    </p>
+    <footer class="text-center mt-16 opacity-60 text-xs tracking-widest font-bold highlight-header">
+        © 2026 GGU RAJAMAHENDRAVARAM | MAITHRI FESTIVAL
+    </footer>
 
 </body>
 </html>
