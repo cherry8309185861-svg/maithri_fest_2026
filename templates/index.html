@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Maithri 2026 Portal</title>
+    <title>Maithri 2026</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         body { background: linear-gradient(135deg, #4c1d95, #b91c1c, #f59e0b); min-height: 100vh; color: white; font-family: sans-serif; }
@@ -14,13 +14,13 @@
 </head>
 <body class="p-4 md:p-10">
     <div class="text-center mb-12">
-        <h1 class="text-5xl font-black tracking-tighter italic">MAITHRI 2026</h1>
-        <p class="uppercase tracking-widest text-sm opacity-90 mt-2">March 06 & 07 | Entry Gate Portal</p>
+        <h1 class="text-5xl font-black italic tracking-tighter">MAITHRI 2026</h1>
+        <p class="uppercase tracking-widest text-sm opacity-90 mt-2">March 06 & 07 | Portal</p>
     </div>
 
     {% if success %}
-    <div class="max-w-md mx-auto glass p-6 mb-10 text-center border-2 border-white animate-bounce">
-        <h2 class="text-xl font-bold">Registration Successful!</h2>
+    <div class="max-w-md mx-auto glass p-6 mb-10 text-center border-2 border-white">
+        <h2 class="text-xl font-bold">Success!</h2>
         <a href="/download_ticket/{{ name }}/{{ val }}/{{ info }}/{{ category }}" class="mt-4 inline-block bg-white text-red-700 px-8 py-3 rounded-full font-black shadow-2xl">Download QR Pass</a>
     </div>
     {% endif %}
@@ -41,12 +41,12 @@
         </div>
 
         <div class="glass p-8">
-            <h2 class="text-2xl font-bold mb-6 text-yellow-300 border-b border-white/20 pb-2">VIP / CIP REGISTRATION</h2>
+            <h2 class="text-2xl font-bold mb-6 text-yellow-300 border-b border-white/20 pb-2">VIP REGISTRATION</h2>
             <form action="/register" method="POST" class="space-y-4">
                 <input type="hidden" name="category" value="vip">
                 <input type="text" name="name" required placeholder="FULL NAME" class="w-full p-4 rounded-xl outline-none">
                 <input type="text" name="mobile" required placeholder="MOBILE NUMBER" class="w-full p-4 rounded-xl outline-none">
-                <input type="text" name="job_info" required placeholder="JOB / QUALIFICATION (e.g. Software Engineer)" class="w-full p-4 rounded-xl outline-none">
+                <input type="text" name="job_info" required placeholder="JOB / QUALIFICATION" class="w-full p-4 rounded-xl outline-none">
                 <button class="w-full bg-yellow-500 text-black hover:bg-yellow-400 py-4 rounded-xl font-black text-lg shadow-lg">GENERATE VIP PASS</button>
             </form>
         </div>
