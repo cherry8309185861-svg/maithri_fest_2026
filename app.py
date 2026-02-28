@@ -27,12 +27,8 @@ def index():
 def register():
     category = request.form.get('category')
     name = request.form.get('name')
-    if category == 'student':
-        val = request.form.get('pin')
-        info = request.form.get('branch')
-    else:
-        val = request.form.get('mobile')
-        info = request.form.get('job_info')
+    val = request.form.get('pin') if category == 'student' else request.form.get('mobile')
+    info = request.form.get('branch') if category == 'student' else request.form.get('job_info')
 
     conn = sqlite3.connect('maithri_fest.db')
     cursor = conn.cursor()
@@ -48,7 +44,6 @@ def download_ticket(name, val, info, category):
     p = canvas.Canvas(buffer, pagesize=A6)
     width, height = A6
     
-    # Red-Orange Fest Theme
     p.setFillColorRGB(0.8, 0.2, 0.1)
     p.rect(0, 0, width, height, fill=1)
     p.setFillColorRGB(1, 1, 1)
@@ -59,10 +54,7 @@ def download_ticket(name, val, info, category):
     p.drawCentredString(width/2, height-21*mm, "MARCH 06 & 07")
 
     p.setFont("Helvetica-Bold", 11)
-    if category == 'vip':
-        msg = "Welcome to the Mythri Fest, Sir!"
-    else:
-        msg = "Welcome to the Maithri Fest and Enjoy the Fest!"
+    msg = "Welcome to the Mythri Fest, Sir!" if category == 'vip' else "Welcome & Enjoy the Fest!"
     p.drawCentredString(width/2, height-35*mm, msg)
 
     p.setFont("Helvetica", 11)
@@ -70,12 +62,16 @@ def download_ticket(name, val, info, category):
     p.drawString(15*mm, height-63*mm, f"ID/MOB: {val}")
     p.drawString(15*mm, height-71*mm, f"INFO: {info.upper()}")
 
-    # QR Code Generation
-    qr = qrcode.make(f"MAITHRI|{category}|{val}")
-    qr_img_buffer = io.BytesIO()
-    qr.save(qr_img_buffer, format='PNG')
-    qr_img_buffer.seek(0)
-    p.drawInlineImage(qr_img_buffer, width/2-22*mm, 10*mm, width=45*mm, height=45*mm)
+    # Stable QR Generation
+    qr = qrcode.QRCode(box_size=10, border=2)
+    qr.add_data(f"MAITHRI2026-{category}-{val}")
+    qr.make(fit=True)
+    img = qr.make_image(fill_color="black", back_color="white")
+    
+    qr_buffer = io.BytesIO()
+    img.save(qr_buffer)
+    qr_buffer.seek(0)
+    p.drawInlineImage(qr_buffer, width/2-22*mm, 10*mm, width=45*mm, height=45*mm)
 
     p.showPage()
     p.save()
